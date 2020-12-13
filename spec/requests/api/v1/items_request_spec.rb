@@ -65,7 +65,7 @@ describe "Items API" do
 
       item_response_checker(item[:data])
     end
-    
+
     it "can delete an item" do
       item = create(:item)
 
@@ -76,6 +76,29 @@ describe "Items API" do
       expect(response).to be_successful
       expect(Item.count).to eq(0)
       expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "can update an item" do
+      id = create(:item).id
+      previous_name = Item.last.name
+      item_params = { name: "Kick Pants" }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate(item_params)
+      item = Item.find_by(id: id)
+
+      expect(response).to be_successful
+      expect(item.name).to_not eq(previous_name)
+      expect(item.name).to eq(item_params[:name])
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(item).to have_key(:data)
+      expect(item[:data]).to be_a(Hash)
+
+      item_response_checker(item[:data])
     end
   end
 end
