@@ -35,5 +35,22 @@ describe "Merchants API" do
         merchant_response_checker(merchant)
       end
     end
+
+    it "can create a new merchant" do
+      # merchant_id = create(:merchant).id
+      merchant_params = ({  name: 'Globodyne' })
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant_params)
+      merchant = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(merchant).to have_key(:data)
+      expect(merchant[:data]).to be_a(Hash)
+      merchant_response_checker(merchant[:data])
+
+      merchant = Merchant.last
+      expect(merchant.name).to eq(merchant_params[:name])
+    end
   end
 end
