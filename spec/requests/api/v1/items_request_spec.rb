@@ -55,7 +55,7 @@ describe "Items API" do
       expect(created_item.description).to eq(item_params[:description])
       expect(created_item.unit_price).to eq(item_params[:unit_price])
       expect(created_item.merchant_id).to eq(item_params[:merchant_id])
-      
+
       item = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to be_successful
@@ -64,6 +64,18 @@ describe "Items API" do
       expect(item[:data]).to be_a(Hash)
 
       item_response_checker(item[:data])
+    end
+    
+    it "can delete an item" do
+      item = create(:item)
+
+      expect(Item.count).to eq(1)
+
+      delete "/api/v1/items/#{item.id}"
+
+      expect(response).to be_successful
+      expect(Item.count).to eq(0)
+      expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
