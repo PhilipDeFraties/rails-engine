@@ -27,22 +27,22 @@ module Helpers
   end
 
   def merchant_response_checker(merchant)
-    expect(merchant[:data]).to have_key(:id)
-    expect(merchant[:data][:id]).to be_a(String)
+    expect(merchant).to have_key(:id)
+    expect(merchant[:id]).to be_a(String)
 
-    expect(merchant[:data]).to have_key(:attributes)
-    expect(merchant[:data][:attributes]).to be_a(Hash)
+    expect(merchant).to have_key(:attributes)
+    expect(merchant[:attributes]).to be_a(Hash)
 
-    expect(merchant[:data][:attributes]).to have_key(:name)
-    expect(merchant[:data][:attributes][:name]).to be_a(String)
+    expect(merchant[:attributes]).to have_key(:name)
+    expect(merchant[:attributes][:name]).to be_a(String)
 
-    expect(merchant[:data]).to have_key(:relationships)
-    expect(merchant[:data][:relationships]).to be_a(Hash)
+    expect(merchant).to have_key(:relationships)
+    expect(merchant[:relationships]).to be_a(Hash)
 
-    expect(merchant[:data][:relationships]).to have_key(:items)
-    expect(merchant[:data][:relationships][:items]).to be_a(Hash)
+    expect(merchant[:relationships]).to have_key(:items)
+    expect(merchant[:relationships][:items]).to be_a(Hash)
 
-    expect(merchant[:data][:relationships][:items]).to have_key(:data)
-    expect(merchant[:data][:relationships][:items][:data]).to be_an(Array)
+    expect(merchant[:relationships][:items]).to have_key(:data)
+    expect(merchant[:relationships][:items][:data]).to be_an(Array)
   end
 end
