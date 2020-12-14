@@ -14,6 +14,7 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'helpers'
+require 'simplecov'
 RSpec.configure do |config|
   config.include Helpers
   # rspec-expectations config goes here. You can use an alternate
