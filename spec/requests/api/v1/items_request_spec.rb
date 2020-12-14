@@ -104,7 +104,7 @@ describe "Items API" do
 
   describe 'Items relationships endpoints' do
     it "can get merchant for item" do
-        merchant = create(:merchant)
+      merchant = create(:merchant)
       item = create(:item, merchant_id: merchant.id)
 
       get "/api/v1/items/#{item.id}/merchants"
@@ -117,6 +117,54 @@ describe "Items API" do
       expect(merchant[:data]).to be_an(Hash)
 
       merchant_response_checker(merchant[:data])
+    end
+  end
+
+  describe 'Items search endpoints' do
+    it "can return a list of items with names matching a search" do
+      item_names = ["Thing 1", "Thing 2", "Thing 3", "Name"]
+
+      item_names.each do |name|
+        create(:item, name: name)
+      end
+
+      get '/api/v1/items/find_all?name=ing'
+
+      items = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(items).to have_key(:data)
+      expect(items[:data]).to be_an(Array)
+      expect(Item.all.count).to eq(4)
+      expect(items[:data].count).to eq(3)
+
+      items[:data].each do |item|
+        item_response_checker(item)
+      end
+    end
+
+    it "can return a list of items with descriptions matching a search" do
+      item_descriptions = ["first cool item", "second cool item", "third cool item", "meh"]
+
+      item_descriptions.each do |description|
+        create(:item, description: description)
+      end
+  
+      get '/api/v1/items/find_all?description=cool'
+
+      items = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(items).to have_key(:data)
+      expect(items[:data]).to be_an(Array)
+      expect(Item.all.count).to eq(4)
+      expect(items[:data].count).to eq(3)
+
+      items[:data].each do |item|
+        item_response_checker(item)
+      end
     end
   end
 end
