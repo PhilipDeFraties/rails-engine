@@ -150,7 +150,7 @@ describe "Items API" do
       item_descriptions.each do |description|
         create(:item, description: description)
       end
-  
+
       get '/api/v1/items/find_all?description=cool'
 
       items = JSON.parse(response.body, symbolize_names: true)
@@ -165,6 +165,45 @@ describe "Items API" do
       items[:data].each do |item|
         item_response_checker(item)
       end
+    end
+
+    it "returns a single item with name matching a search" do
+    items =  [create(:item, name: "Thing 1"),
+              create(:item, name: "Thing 2"),
+              create(:item, name: "Name 1"),
+              create(:item, name: "Name 2")]
+
+      get '/api/v1/items/find?name=name'
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(item).to have_key(:data)
+      expect(item[:data]).to be_an(Hash)
+      expect(Item.all.count).to eq(4)
+      expect(item.count).to eq(1)
+      expect(item[:data][:attributes][:name]).to eq(items[2].name)
+      item_response_checker(item[:data])
+    end
+
+    it "returns a single item with description matching a search" do
+      items =  [create(:item, description: "first cool item"),
+                create(:item, description: "second cool item"),
+                create(:item, description: "third cool item"),
+                create(:item, description: "meh")]
+
+      get '/api/v1/items/find?description=cool'
+
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(item).to have_key(:data)
+      expect(item[:data]).to be_an(Hash)
+      expect(Item.all.count).to eq(4)
+      expect(item.count).to eq(1)
+      expect(item[:data][:attributes][:description]).to eq(items[0].description)
+      item_response_checker(item[:data])
     end
   end
 end
