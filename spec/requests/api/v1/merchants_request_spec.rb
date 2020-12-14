@@ -84,4 +84,29 @@ describe "Merchants API" do
       expect(merchant.name).to eq("Globodyne")
     end
   end
+
+  describe 'Merchant relationships endpoints' do
+    it "can get items for a merchant" do
+      merchant = create(:merchant)
+      merchant_2 = create(:merchant)
+
+      create_list(:item, 10, merchant_id: merchant.id)
+      create_list(:item, 10, merchant_id: merchant_2.id)
+
+      get "/api/v1/merchants/#{merchant.id}/items"
+
+      merchant_items = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(merchant_items).to have_key(:data)
+      expect(merchant_items[:data]).to be_an(Array)
+      expect(merchant_items[:data].count).to eq(10)
+      expect(Item.all.count).to eq(20)
+
+      merchant_items[:data].each do |item|
+        item_response_checker(item)
+      end
+    end
+  end
 end
