@@ -104,19 +104,19 @@ describe "Items API" do
 
   describe 'Items relationships endpoints' do
     it "can get merchant for item" do
-      merchant = create(:merchant)
-    item = create(:item, merchant_id: merchant.id)
+        merchant = create(:merchant)
+      item = create(:item, merchant_id: merchant.id)
 
-    get "/api/v1/items/#{item.id}/merchants"
+      get "/api/v1/items/#{item.id}/merchants"
 
-    merchant = JSON.parse(response.body, symbolize_names: true)
+      merchant = JSON.parse(response.body, symbolize_names: true)
 
-    expect(response).to be_successful
+      expect(response).to be_successful
 
-    expect(merchant).to have_key(:data)
-    expect(merchant[:data]).to be_an(Hash)
+      expect(merchant).to have_key(:data)
+      expect(merchant[:data]).to be_an(Hash)
 
-    merchant_response_checker(merchant[:data])
+      merchant_response_checker(merchant[:data])
     end
   end
 end
