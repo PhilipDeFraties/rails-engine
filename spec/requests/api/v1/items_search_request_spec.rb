@@ -98,16 +98,36 @@ describe "Items API" do
       end
 
       it "with unit price matching query" do
+        items = [ create(:item, unit_price: 2.55),
+                  create(:item, unit_price: 3.99),
+                  create(:item, unit_price: 2.55),
+                  create(:item, unit_price: 3.99) ]
 
+        get '/api/v1/items/find_all?unit_price=2.55'
+
+        items_response = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(items_response).to have_key(:data)
+        expect(items_response[:data]).to be_an(Array)
+        expect(Item.all.count).to eq(4)
+        expect(items_response[:data].count).to eq(2)
+
+        items_response[:data].each do |item|
+          item_response_checker(item)
+        end
+        expect(items_response[:data][0][:id]).to eq(items[0].id.to_s)
+        expect(items_response[:data][1][:id]).to eq(items[2].id.to_s)
       end
     end
 
     describe "returns a single item" do
       it "with name matching a search" do
-        items =  [create(:item, name: "Thing 1"),
-                  create(:item, name: "Thing 2"),
-                  create(:item, name: "Name 1"),
-                  create(:item, name: "Name 2")]
+        items =  [ create(:item, name: "Thing 1"),
+                   create(:item, name: "Thing 2"),
+                   create(:item, name: "Name 1"),
+                   create(:item, name: "Name 2") ]
 
         get '/api/v1/items/find?name=ame'
 
@@ -123,10 +143,10 @@ describe "Items API" do
       end
 
       it "with description matching a search" do
-        items =  [create(:item, description: "first cool item"),
+        items =  [ create(:item, description: "first cool item"),
                   create(:item, description: "second cool item"),
                   create(:item, description: "third cool item"),
-                  create(:item, description: "meh")]
+                  create(:item, description: "meh") ]
 
         get '/api/v1/items/find?description=cool'
 
@@ -143,10 +163,10 @@ describe "Items API" do
       end
 
       it "with created timestamp matching query" do
-        items = [create(:item, created_at: 'Wed, 16 Dec 2020'),
+        items = [ create(:item, created_at: 'Wed, 16 Dec 2020'),
                   create(:item, created_at: 'Tue, 15 Dec 2020'),
                   create(:item, created_at: 'Wed, 16 Dec 2020'),
-                  create(:item, created_at: 'Tue, 15 Dec 2020')]
+                  create(:item, created_at: 'Tue, 15 Dec 2020') ]
 
         get '/api/v1/items/find?created_at=December+16'
 
@@ -169,6 +189,26 @@ describe "Items API" do
                   create(:item, created_at: 'Tue, 15 Dec 2020')]
 
         get '/api/v1/items/find?updated_at=December+16'
+
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(item).to have_key(:data)
+        expect(item[:data]).to be_an(Hash)
+        expect(Item.all.count).to eq(4)
+        expect(item.count).to eq(1)
+        expect(item[:data][:id]).to eq(items[0].id.to_s)
+        item_response_checker(item[:data])
+      end
+
+      it "with unit price matching query" do
+        items = [ create(:item, unit_price: 2.55),
+                  create(:item, unit_price: 3.99),
+                  create(:item, unit_price: 2.55),
+                  create(:item, unit_price: 3.99) ]
+
+        get '/api/v1/items/find?unit_price=2.55'
 
         item = JSON.parse(response.body, symbolize_names: true)
 
