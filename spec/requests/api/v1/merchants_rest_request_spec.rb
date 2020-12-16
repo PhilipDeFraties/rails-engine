@@ -108,30 +108,5 @@ describe "Merchants API" do
         item_response_checker(item)
       end
     end
-
-    describe 'Merchant search endpoints' do
-      it "can return a list of merchants with names matching search query" do
-        merchant_names = ["Merchant 1", "Merchant 2", "Merchant 3", "Name"]
-
-        merchant_names.each do |name|
-          create(:merchant, name: name)
-        end
-
-        get '/api/v1/merchants/find_all?name=ANT'
-
-        merchants = JSON.parse(response.body, symbolize_names: true)
-
-        expect(response).to be_successful
-
-        expect(merchants).to have_key(:data)
-        expect(merchants[:data]).to be_an(Array)
-        expect(Merchant.all.count).to eq(4)
-        expect(merchants[:data].count).to eq(3)
-
-        merchants[:data].each do |merchant|
-          merchant_response_checker(merchant)
-        end
-      end
-    end
   end
 end
