@@ -49,13 +49,37 @@ describe "Items API" do
         end
       end
 
-      it "with created dates matching query" do
+      it "with created timestamps matching query" do
         item_1 = create(:item, created_at: 'Wed, 16 Dec 2020')
         item_2 = create(:item, created_at: 'Tue, 15 Dec 2020')
         item_3 = create(:item, created_at: 'Wed, 16 Dec 2020')
         item_4 = create(:item, created_at: 'Tue, 15 Dec 2020')
 
         get '/api/v1/items/find_all?created_at=December+16'
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(items).to have_key(:data)
+        expect(items[:data]).to be_an(Array)
+        expect(Item.all.count).to eq(4)
+        expect(items[:data].count).to eq(2)
+
+        items[:data].each do |item|
+          item_response_checker(item)
+        end
+        expect(items[:data][0][:id]).to eq(item_1.id.to_s)
+        expect(items[:data][1][:id]).to eq(item_3.id.to_s)
+      end
+
+      it "with updated timestamps matching query" do
+        item_1 = create(:item, updated_at: 'Wed, 16 Dec 2020')
+        item_2 = create(:item, updated_at: 'Tue, 15 Dec 2020')
+        item_3 = create(:item, updated_at: 'Wed, 16 Dec 2020')
+        item_4 = create(:item, updated_at: 'Tue, 15 Dec 2020')
+
+        get '/api/v1/items/find_all?updated_at=December+16'
 
         items = JSON.parse(response.body, symbolize_names: true)
 
@@ -98,7 +122,7 @@ describe "Items API" do
         item_response_checker(item[:data])
       end
 
-      it "returns a single item with description matching a search" do
+      it "with description matching a search" do
         items =  [create(:item, description: "first cool item"),
                   create(:item, description: "second cool item"),
                   create(:item, description: "third cool item"),
@@ -114,7 +138,47 @@ describe "Items API" do
         expect(item[:data]).to be_an(Hash)
         expect(Item.all.count).to eq(4)
         expect(item.count).to eq(1)
-        expect(item[:data][:attributes][:description]).to eq(items[0].description)
+        expect(item[:data][:id]).to eq(items[0].id.to_s)
+        item_response_checker(item[:data])
+      end
+
+      it "with created timestamp matching query" do
+        items = [create(:item, created_at: 'Wed, 16 Dec 2020'),
+                  create(:item, created_at: 'Tue, 15 Dec 2020'),
+                  create(:item, created_at: 'Wed, 16 Dec 2020'),
+                  create(:item, created_at: 'Tue, 15 Dec 2020')]
+
+        get '/api/v1/items/find?created_at=December+16'
+
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(item).to have_key(:data)
+        expect(item[:data]).to be_an(Hash)
+        expect(Item.all.count).to eq(4)
+        expect(item.count).to eq(1)
+        expect(item[:data][:id]).to eq(items[0].id.to_s)
+        item_response_checker(item[:data])
+      end
+
+      it "with updated timestamp matching query" do
+        items = [create(:item, updated_at: 'Wed, 16 Dec 2020'),
+                  create(:item, created_at: 'Tue, 15 Dec 2020'),
+                  create(:item, updated_at: 'Wed, 16 Dec 2020'),
+                  create(:item, created_at: 'Tue, 15 Dec 2020')]
+
+        get '/api/v1/items/find?updated_at=December+16'
+
+        item = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(item).to have_key(:data)
+        expect(item[:data]).to be_an(Hash)
+        expect(Item.all.count).to eq(4)
+        expect(item.count).to eq(1)
+        expect(item[:data][:id]).to eq(items[0].id.to_s)
         item_response_checker(item[:data])
       end
     end
