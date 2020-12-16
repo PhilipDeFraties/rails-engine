@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       end
 
       get 'merchants/find_all', to: 'merchants/search#index'
+      get 'merchants/find', to: 'merchants/search#show'
+      
       resources :merchants do
         get :items, to: 'merchants/items#index'
       end
