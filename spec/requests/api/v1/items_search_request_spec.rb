@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Items API" do
   describe 'Items search endpoints' do
     describe 'It can return a list of items' do
-      it "with names matching a search query" do
+      it "with names partially matching a search query" do
         item_names = ["Thing 1", "Thing 2", "Thing 3", "Name"]
 
         item_names.each do |name|
@@ -26,7 +26,30 @@ describe "Items API" do
         end
       end
 
-      it "with descriptions matching a search" do
+      it "with names partially matching a search query, case insensitive" do
+        item_names = ["Thing 1", "Thing 2", "Thing 3", "Name"]
+
+        item_names.each do |name|
+          create(:item, name: name)
+        end
+
+        get '/api/v1/items/find_all?name=ING'
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(items).to have_key(:data)
+        expect(items[:data]).to be_an(Array)
+        expect(Item.all.count).to eq(4)
+        expect(items[:data].count).to eq(3)
+
+        items[:data].each do |item|
+          item_response_checker(item)
+        end
+      end
+
+      it "with descriptions partially matching a search" do
         item_descriptions = ["first cool item", "second cool item", "third cool item", "meh"]
 
         item_descriptions.each do |description|
@@ -49,7 +72,30 @@ describe "Items API" do
         end
       end
 
-      it "with created timestamps matching query" do
+      it "with descriptions partially matching a search, case insensitive" do
+        item_descriptions = ["first cool item", "second cool item", "third cool item", "meh"]
+
+        item_descriptions.each do |description|
+          create(:item, description: description)
+        end
+
+        get '/api/v1/items/find_all?description=COOL'
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(items).to have_key(:data)
+        expect(items[:data]).to be_an(Array)
+        expect(Item.all.count).to eq(4)
+        expect(items[:data].count).to eq(3)
+
+        items[:data].each do |item|
+          item_response_checker(item)
+        end
+      end
+
+      it "with created timestamps matching a query" do
         item_1 = create(:item, created_at: 'Wed, 16 Dec 2020')
         item_2 = create(:item, created_at: 'Tue, 15 Dec 2020')
         item_3 = create(:item, created_at: 'Wed, 16 Dec 2020')
@@ -73,13 +119,61 @@ describe "Items API" do
         expect(items[:data][1][:id]).to eq(item_3.id.to_s)
       end
 
-      it "with updated timestamps matching query" do
+      it "with created timestamps matching a query, case insensitive" do
+        item_1 = create(:item, created_at: 'Wed, 16 Dec 2020')
+        item_2 = create(:item, created_at: 'Tue, 15 Dec 2020')
+        item_3 = create(:item, created_at: 'Wed, 16 Dec 2020')
+        item_4 = create(:item, created_at: 'Tue, 15 Dec 2020')
+
+        get '/api/v1/items/find_all?created_at=DECEMBER+16'
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(items).to have_key(:data)
+        expect(items[:data]).to be_an(Array)
+        expect(Item.all.count).to eq(4)
+        expect(items[:data].count).to eq(2)
+
+        items[:data].each do |item|
+          item_response_checker(item)
+        end
+        expect(items[:data][0][:id]).to eq(item_1.id.to_s)
+        expect(items[:data][1][:id]).to eq(item_3.id.to_s)
+      end
+
+      it "with updated timestamps matching a query" do
         item_1 = create(:item, updated_at: 'Wed, 16 Dec 2020')
         item_2 = create(:item, updated_at: 'Tue, 15 Dec 2020')
         item_3 = create(:item, updated_at: 'Wed, 16 Dec 2020')
         item_4 = create(:item, updated_at: 'Tue, 15 Dec 2020')
 
         get '/api/v1/items/find_all?updated_at=December+16'
+
+        items = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+
+        expect(items).to have_key(:data)
+        expect(items[:data]).to be_an(Array)
+        expect(Item.all.count).to eq(4)
+        expect(items[:data].count).to eq(2)
+
+        items[:data].each do |item|
+          item_response_checker(item)
+        end
+        expect(items[:data][0][:id]).to eq(item_1.id.to_s)
+        expect(items[:data][1][:id]).to eq(item_3.id.to_s)
+      end
+
+      it "with updated timestamps partially matching query, case insensitive" do
+        item_1 = create(:item, updated_at: 'Wed, 16 Dec 2020')
+        item_2 = create(:item, updated_at: 'Tue, 15 Dec 2020')
+        item_3 = create(:item, updated_at: 'Wed, 16 Dec 2020')
+        item_4 = create(:item, updated_at: 'Tue, 15 Dec 2020')
+
+        get '/api/v1/items/find_all?updated_at=DECEMBER+16'
 
         items = JSON.parse(response.body, symbolize_names: true)
 
