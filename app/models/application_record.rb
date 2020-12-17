@@ -9,7 +9,7 @@ class ApplicationRecord < ActiveRecord::Base
     elsif attribute == 'created_at' || attribute == 'updated_at'
       where("#{attribute} = '%#{value.to_date}%'")
     else
-      where("lower(#{attribute}) LIKE ?", "%#{value}%")
+      where("lower(#{attribute}) LIKE lower('%#{value}%')")
     end
   end
 end

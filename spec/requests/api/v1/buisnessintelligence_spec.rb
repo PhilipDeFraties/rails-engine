@@ -1,55 +1,55 @@
 require 'rails_helper'
 
 describe 'Buisness Intelligence Endpoints' do
-  describe 'Merchants with Most Revenue' do
-    before :each do
-      @mer_1 = create :merchant
-      @mer_2 = create :merchant
-      @mer_3 = create :merchant
-      @mer_4 = create :merchant
-      @mer_5 = create :merchant
-      @mer_6 = create :merchant
-      @mer_7 = create :merchant
-      @mer_8 = create :merchant
+  before :each do
+    @mer_1 = create :merchant
+    @mer_2 = create :merchant
+    @mer_3 = create :merchant
+    @mer_4 = create :merchant
+    @mer_5 = create :merchant
+    @mer_6 = create :merchant
+    @mer_7 = create :merchant
+    @mer_8 = create :merchant
 
-      @item_1 = create(:item, unit_price: 1.00, merchant: @mer_1)
-      @item_2 = create(:item, unit_price: 1.00, merchant: @mer_2)
-      @item_3 = create(:item, unit_price: 1.00, merchant: @mer_3)
-      @item_4 = create(:item, unit_price: 1.00, merchant: @mer_4)
-      @item_5 = create(:item, unit_price: 1.00, merchant: @mer_5)
-      @item_6 = create(:item, unit_price: 1.00, merchant: @mer_6)
-      @item_7 = create(:item, unit_price: 1.00, merchant: @mer_7)
-      @item_8 = create(:item, unit_price: 0.01, merchant: @mer_8)
+    @item_1 = create(:item, unit_price: 1.00, merchant: @mer_1)
+    @item_2 = create(:item, unit_price: 1.00, merchant: @mer_2)
+    @item_3 = create(:item, unit_price: 1.00, merchant: @mer_3)
+    @item_4 = create(:item, unit_price: 1.00, merchant: @mer_4)
+    @item_5 = create(:item, unit_price: 1.00, merchant: @mer_5)
+    @item_6 = create(:item, unit_price: 1.00, merchant: @mer_6)
+    @item_7 = create(:item, unit_price: 1.00, merchant: @mer_7)
+    @item_8 = create(:item, unit_price: 0.01, merchant: @mer_8)
 
 
-      @invoice_1 = create(:invoice, merchant: @mer_1)
-      @invoice_2 = create(:invoice, merchant: @mer_2)
-      @invoice_3 = create(:invoice, merchant: @mer_3)
-      @invoice_4 = create(:invoice, merchant: @mer_4)
-      @invoice_5 = create(:invoice, merchant: @mer_5)
-      @invoice_6 = create(:invoice, merchant: @mer_6)
-      @invoice_7 = create(:invoice, merchant: @mer_7, status: 'packaged')
-      @invoice_8 = create(:invoice, merchant: @mer_8)
+    @invoice_1 = create(:invoice, merchant: @mer_1, created_at: '2012-03-10')
+    @invoice_2 = create(:invoice, merchant: @mer_2, created_at: '2012-03-10')
+    @invoice_3 = create(:invoice, merchant: @mer_3, created_at: '2012-03-10')
+    @invoice_4 = create(:invoice, merchant: @mer_4, created_at: '2012-03-10')
+    @invoice_5 = create(:invoice, merchant: @mer_5, created_at: '2012-03-10')
+    @invoice_6 = create(:invoice, merchant: @mer_6, created_at: '2012-03-10')
+    @invoice_7 = create(:invoice, merchant: @mer_7, created_at: '2012-03-10', status: 'packaged')
+    @invoice_8 = create(:invoice, merchant: @mer_8, created_at: '2012-03-10')
 
-      @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 5, unit_price: 1.00)
-      @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2, quantity: 4, unit_price: 1.00)
-      @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_3, quantity: 6, unit_price: 1.00)
-      @invoice_item_4 = create(:invoice_item, item: @item_4, invoice: @invoice_4, quantity: 1, unit_price: 1.00)
-      @invoice_item_5 = create(:invoice_item, item: @item_5, invoice: @invoice_5, quantity: 2, unit_price: 1.00)
-      @invoice_item_6 = create(:invoice_item, item: @item_6, invoice: @invoice_6, quantity: 3, unit_price: 1.00)
-      @invoice_item_7 = create(:invoice_item, item: @item_7, invoice: @invoice_7, quantity: 7, unit_price: 1.00)
-      @invoice_item_8 = create(:invoice_item, item: @item_8, invoice: @invoice_8, quantity: 20, unit_price: 0.01)
+    @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 5, unit_price: 1.00)
+    @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2, quantity: 4, unit_price: 1.00)
+    @invoice_item_3 = create(:invoice_item, item: @item_3, invoice: @invoice_3, quantity: 6, unit_price: 1.00)
+    @invoice_item_4 = create(:invoice_item, item: @item_4, invoice: @invoice_4, quantity: 1, unit_price: 1.00)
+    @invoice_item_5 = create(:invoice_item, item: @item_5, invoice: @invoice_5, quantity: 2, unit_price: 1.00)
+    @invoice_item_6 = create(:invoice_item, item: @item_6, invoice: @invoice_6, quantity: 3, unit_price: 1.00)
+    @invoice_item_7 = create(:invoice_item, item: @item_7, invoice: @invoice_7, quantity: 7, unit_price: 1.00)
+    @invoice_item_8 = create(:invoice_item, item: @item_8, invoice: @invoice_8, quantity: 20, unit_price: 0.01)
 
-      @transaction_1 = create(:transaction, invoice: @invoice_1)
-      @transaction_2 = create(:transaction, invoice: @invoice_2)
-      @transaction_3 = create(:transaction, invoice: @invoice_3)
-      @transaction_4 = create(:transaction, invoice: @invoice_4)
-      @transaction_5 = create(:transaction, invoice: @invoice_5)
-      @transaction_6 = create(:transaction, invoice: @invoice_6)
-      @transaction_7 = create(:transaction, invoice: @invoice_7, result: 'pending')
-      @transaction_8 = create(:transaction, invoice: @invoice_8)
-    end
+    @transaction_1 = create(:transaction, invoice: @invoice_1)
+    @transaction_2 = create(:transaction, invoice: @invoice_2)
+    @transaction_3 = create(:transaction, invoice: @invoice_3)
+    @transaction_4 = create(:transaction, invoice: @invoice_4)
+    @transaction_5 = create(:transaction, invoice: @invoice_5)
+    @transaction_6 = create(:transaction, invoice: @invoice_6)
+    @transaction_7 = create(:transaction, invoice: @invoice_7, result: 'pending')
+    @transaction_8 = create(:transaction, invoice: @invoice_8)
+  end
 
+  describe 'Most revenue' do
     it "can return a variable number of merchants ranked by total revenue " do
       get '/api/v1/merchants/most_revenue?quantity=5'
 
@@ -74,6 +74,44 @@ describe 'Buisness Intelligence Endpoints' do
        expect(resulting_ids_by_revenue).to eq(expected_ids_by_revenue)
     end
 
+    it "responds with error if quantity for results not sent with no value" do
+      get '/api/v1/merchants/most_revenue?quantity='
+
+      error_message = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(error_message).to be_a(Hash)
+
+      expect(error_message).to have_key(:error)
+      expect(error_message[:error]).to eq('missing parameter')
+
+      expect(error_message).to have_key(:errors)
+      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+
+      expect(error_message).to have_key(:status)
+      expect(error_message[:status]).to eq('bad_request')
+    end
+
+    it "responds with error if quantity parameter missing entirely" do
+      get '/api/v1/merchants/most_revenue?'
+
+      error_message = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(error_message).to be_a(Hash)
+
+      expect(error_message).to have_key(:error)
+      expect(error_message[:error]).to eq('missing parameter')
+
+      expect(error_message).to have_key(:errors)
+      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+
+      expect(error_message).to have_key(:status)
+      expect(error_message[:status]).to eq('bad_request')
+    end
+  end
+
+  describe 'Most items sold' do
     it "can return a variable number of merchants ranked by total items sold" do
       get '/api/v1/merchants/most_items?quantity=2'
 
@@ -99,6 +137,44 @@ describe 'Buisness Intelligence Endpoints' do
       expect(resulting_ids_by_quantity_sold).to eq(expected_ids_by_quantity_sold)
     end
 
+    it "responds with error if quantity for results not sent in request" do
+      get '/api/v1/merchants/most_items?quantity='
+
+      error_message = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(error_message).to be_a(Hash)
+
+      expect(error_message).to have_key(:error)
+      expect(error_message[:error]).to eq('missing parameter')
+
+      expect(error_message).to have_key(:errors)
+      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+
+      expect(error_message).to have_key(:status)
+      expect(error_message[:status]).to eq('bad_request')
+    end
+
+    it "responds with error if quantity parameter missing entirely" do
+      get '/api/v1/merchants/most_items?'
+
+      error_message = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(error_message).to be_a(Hash)
+
+      expect(error_message).to have_key(:error)
+      expect(error_message[:error]).to eq('missing parameter')
+
+      expect(error_message).to have_key(:errors)
+      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+
+      expect(error_message).to have_key(:status)
+      expect(error_message[:status]).to eq('bad_request')
+    end
+  end
+
+  describe 'Total revenue' do
     it "can return total revenue for a merchant" do
       get "/api/v1/merchants/#{@mer_3.id}/revenue"
 
@@ -111,6 +187,57 @@ describe 'Buisness Intelligence Endpoints' do
       revenue_response_checker(revenue[:data])
 
       expect(revenue[:data][:attributes][:revenue]).to eq(6)
+    end
+
+    it "can return the total revenue across all merchants between the given dates" do
+      get '/api/v1/revenue?start=2012-03-09&end=2012-03-24'
+
+      revenue = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(revenue).to have_key(:data)
+
+      revenue_response_checker(revenue[:data])
+
+      expect(revenue[:data][:attributes][:revenue]).to eq(21.20)
+    end
+
+    it "responds with error if start or end param sent with empty value" do
+      get '/api/v1/revenue?start=2012-03-09&end='
+
+      error_message = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(error_message).to be_a(Hash)
+
+      expect(error_message).to have_key(:error)
+      expect(error_message[:error]).to eq('missing parameter')
+
+      expect(error_message).to have_key(:errors)
+      expect(error_message[:errors].first).to eq('end parameter required in search request')
+
+      expect(error_message).to have_key(:status)
+      expect(error_message[:status]).to eq('bad_request')
+    end
+
+    it "responds with error if start or end param missing entirely" do
+      get '/api/v1/revenue?'
+
+      error_message = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(error_message).to be_a(Hash)
+
+      expect(error_message).to have_key(:error)
+      expect(error_message[:error]).to eq('missing parameter')
+
+      expect(error_message).to have_key(:errors)
+      expect(error_message[:errors].first).to eq('start parameter required in search request')
+      expect(error_message[:errors].last).to eq('end parameter required in search request')
+
+      expect(error_message).to have_key(:status)
+      expect(error_message[:status]).to eq('bad_request')
     end
   end
 end
