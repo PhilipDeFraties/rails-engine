@@ -98,5 +98,19 @@ describe 'Buisness Intelligence Endpoints' do
 
       expect(resulting_ids_by_quantity_sold).to eq(expected_ids_by_quantity_sold)
     end
+
+    it "can return total revenue for a merchant" do
+      get "/api/v1/merchants/#{@mer_3.id}/revenue"
+
+      revenue = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(revenue).to have_key(:data)
+
+      revenue_response_checker(revenue[:data])
+
+      expect(revenue[:data][:attributes][:revenue]).to eq(6)
+    end
   end
 end
