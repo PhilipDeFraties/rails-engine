@@ -30,7 +30,7 @@ class Api::V1::Merchants::BizintelController < ApplicationController
     unless errors.empty?
       check_params(errors)
     else
-      render json: RevenueSerializer.revenue(InvoiceItem.revenue_accross_dates(params[:start], params[:end]))
+      render json: RevenueSerializer.revenue(InvoiceItem.revenue_across_dates(params[:start], params[:end]))
     end
   end
 
