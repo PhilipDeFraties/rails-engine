@@ -1,10 +1,10 @@
 class Merchant < ApplicationRecord
+  validates_presence_of :name
+
   has_many :items, :dependent => :delete_all
   has_many :invoices, :dependent => :delete_all
   has_many :invoice_items, through: :invoices
   has_many :transactions, through: :invoices
-
-  validates_presence_of :name
 
   def self.most_revenue(quantity)
     select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
