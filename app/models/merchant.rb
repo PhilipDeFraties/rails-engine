@@ -22,4 +22,10 @@ class Merchant < ApplicationRecord
       .order("items_sold DESC")
       .limit(quantity)
   end
+
+  def self.revenue(id)
+    joins(invoices: [:invoice_items, :transactions])
+      .where("merchants.id = #{id} AND transactions.result = 'success' AND invoices.status = 'shipped'")
+      .sum("invoice_items.quantity * invoice_items.unit_price")
+  end
 end
