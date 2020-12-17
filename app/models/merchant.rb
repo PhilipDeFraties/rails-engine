@@ -14,4 +14,12 @@ class Merchant < ApplicationRecord
       .limit(quantity)
   end
 
+  def self.rank_by_items_sold(quantity)
+    select("merchants.*, SUM(invoice_items.quantity) AS items_sold")
+      .joins(invoices: [:invoice_items, :transactions])
+      .where("transactions.result = 'success' AND invoices.status = 'shipped'")
+      .group(:id)
+      .order("items_sold DESC")
+      .limit(quantity)
+  end
 end
