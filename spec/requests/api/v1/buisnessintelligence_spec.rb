@@ -22,14 +22,14 @@ describe 'Buisness Intelligence Endpoints' do
       @item_8 = create(:item, unit_price: 0.01, merchant: @mer_8)
 
 
-      @invoice_1 = create(:invoice, merchant: @mer_1)
-      @invoice_2 = create(:invoice, merchant: @mer_2)
-      @invoice_3 = create(:invoice, merchant: @mer_3)
-      @invoice_4 = create(:invoice, merchant: @mer_4)
-      @invoice_5 = create(:invoice, merchant: @mer_5)
-      @invoice_6 = create(:invoice, merchant: @mer_6)
-      @invoice_7 = create(:invoice, merchant: @mer_7, status: 'packaged')
-      @invoice_8 = create(:invoice, merchant: @mer_8)
+      @invoice_1 = create(:invoice, merchant: @mer_1, created_at: '2012-03-10')
+      @invoice_2 = create(:invoice, merchant: @mer_2, created_at: '2012-03-10')
+      @invoice_3 = create(:invoice, merchant: @mer_3, created_at: '2012-03-10')
+      @invoice_4 = create(:invoice, merchant: @mer_4, created_at: '2012-03-10')
+      @invoice_5 = create(:invoice, merchant: @mer_5, created_at: '2012-03-10')
+      @invoice_6 = create(:invoice, merchant: @mer_6, created_at: '2012-03-10')
+      @invoice_7 = create(:invoice, merchant: @mer_7, created_at: '2012-03-10', status: 'packaged')
+      @invoice_8 = create(:invoice, merchant: @mer_8, created_at: '2012-03-10')
 
       @invoice_item_1 = create(:invoice_item, item: @item_1, invoice: @invoice_1, quantity: 5, unit_price: 1.00)
       @invoice_item_2 = create(:invoice_item, item: @item_2, invoice: @invoice_2, quantity: 4, unit_price: 1.00)
@@ -111,6 +111,20 @@ describe 'Buisness Intelligence Endpoints' do
       revenue_response_checker(revenue[:data])
 
       expect(revenue[:data][:attributes][:revenue]).to eq(6)
+    end
+
+    it "can return the total revenue across all merchants between the given dates" do
+      get '/api/v1/revenue?start=2012-03-09&end=2012-03-24'
+
+      revenue = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(revenue).to have_key(:data)
+
+      revenue_response_checker(revenue[:data])
+
+      expect(revenue[:data][:attributes][:revenue]).to eq(21.20)
     end
   end
 end
