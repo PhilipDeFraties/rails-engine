@@ -45,4 +45,12 @@ module Helpers
     expect(merchant[:relationships][:items]).to have_key(:data)
     expect(merchant[:relationships][:items][:data]).to be_an(Array)
   end
+
+  def revenue_response_checker(revenue)
+    expect(revenue).to have_key(:attributes)
+    expect(revenue[:attributes]).to be_a(Hash)
+
+    expect(revenue[:attributes]).to have_key(:revenue)
+    expect(revenue[:attributes][:revenue]).to be_a(Float)
+  end
 end
