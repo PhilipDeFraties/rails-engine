@@ -65,8 +65,6 @@ RSpec.describe Merchant, type: :model do
       @transaction_7 = create(:transaction, invoice: @invoice_7)
       @transaction_8 = create(:transaction, invoice: @invoice_8)
       @transaction_9 = create(:transaction, invoice: @invoice_9, result: 'failed')
-
-
     end
 
     it "#most_revenue" do
