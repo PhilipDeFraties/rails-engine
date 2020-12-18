@@ -32,7 +32,7 @@
   ```
 
 ## Schema
-  <img src="https://dbdiagram.io/d/5fdc18569a6c525a03bb8635">
+  <iframe width="560" height="315" src='https://dbdiagram.io/embed/5fdc18569a6c525a03bb8635'> </iframe>
   
 
 ## Testing
