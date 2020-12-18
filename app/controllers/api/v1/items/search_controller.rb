@@ -1,13 +1,21 @@
 class Api::V1::Items::SearchController < ApplicationController
 
   def index
-    items = Item.search(search_attribute, search_value)
-    render json: ItemSerializer.new(items)
+    unless search_attribute && !search_value.blank?
+      check_params(['search'])
+    else
+      items = Item.search(search_attribute, search_value)
+      render json: ItemSerializer.new(items)
+    end
   end
 
   def show
-    item = Item.search(search_attribute, search_value).first
-    render json: ItemSerializer.new(item)
+    unless search_attribute && !search_value.blank?
+      check_params(['search'])
+    else
+      item = Item.search(search_attribute, search_value).first
+      render json: ItemSerializer.new(item)
+    end
   end
 
   private

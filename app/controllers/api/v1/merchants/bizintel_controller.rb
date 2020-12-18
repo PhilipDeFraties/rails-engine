@@ -33,16 +33,4 @@ class Api::V1::Merchants::BizintelController < ApplicationController
       render json: RevenueSerializer.revenue(InvoiceItem.revenue_across_dates(params[:start], params[:end]))
     end
   end
-
-private
-
-  def check_params(params)
-    render json: JSON.generate(
-      {
-        error: 'missing parameter',
-        errors: params.map { |param| "#{param} parameter required in search request" },
-        status: :bad_request
-      }
-    )
-  end
 end

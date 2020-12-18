@@ -265,5 +265,83 @@ describe "Merchants API" do
         merchant_response_checker(merchant[:data])
       end
     end
+
+    describe 'sad paths' do
+      it 'responds with error if param value blank in single search' do
+
+        get '/api/v1/merchants/find?name='
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
+      end
+
+      it 'responds with error if param undefined in single search' do
+
+        get '/api/v1/merchants/find?'
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
+      end
+
+      it 'responds with error if param value blank in multi search' do
+
+        get '/api/v1/merchants/find_all?name='
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
+      end
+
+      it 'responds with error if param undefined in multi search' do
+
+        get '/api/v1/merchants/find_all?'
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
+      end
+    end
   end
 end

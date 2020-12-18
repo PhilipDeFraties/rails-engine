@@ -242,7 +242,7 @@ describe "Items API" do
                    create(:item, name: "Name 1"),
                    create(:item, name: "Name 2") ]
 
-        get '/api/v1/items/find?NAME=THING+1'
+        get '/api/v1/items/find?name=THING+1'
 
         item = JSON.parse(response.body, symbolize_names: true)
 
@@ -471,6 +471,84 @@ describe "Items API" do
         expect(item.count).to eq(1)
         expect(item[:data][:id]).to eq(items[1].id.to_s)
         item_response_checker(item[:data])
+      end
+    end
+
+    describe 'sad paths' do
+      it "responds with error if param undefined in single search" do
+
+        get '/api/v1/items/find?'
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
+      end
+
+      it "responds with error if param value blank in single search" do
+
+        get '/api/v1/items/find?name='
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
+      end
+
+      it "responds with error if param undefined in single search" do
+
+        get '/api/v1/items/find_all?'
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
+      end
+
+      it "responds with error if param value blank in single search" do
+
+        get '/api/v1/items/find_all?name='
+
+        error_message = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to be_successful
+        expect(error_message).to be_a(Hash)
+
+        expect(error_message).to have_key(:error)
+        expect(error_message[:error]).to eq('missing parameter')
+
+        expect(error_message).to have_key(:errors)
+        expect(error_message[:errors].first).to eq('search parameter with value required in search request')
+
+        expect(error_message).to have_key(:status)
+        expect(error_message[:status]).to eq('bad_request')
       end
     end
   end
