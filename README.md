@@ -32,8 +32,7 @@
   ```
 
 ## Schema
-  <img src="https://dbdiagram.io/d/5fdc18569a6c525a03bb8635" width="450" height="350">
-  
+ <img src="https://github.com/PhilipDeFraties/rails-engine/blob/main/images/RailsEngineSchemaDiagram.png" width="450" height="350">
 
 ## Testing
   The program was developed through strict Test-Driven Development, utilizing
