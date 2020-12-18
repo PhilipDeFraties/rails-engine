@@ -32,7 +32,7 @@
   ```
 
 ## Schema
-  <iframe width="560" height="315" src='https://dbdiagram.io/embed/5fdc18569a6c525a03bb8635'> </iframe>">
+  <img iframe width="560" height="315" src='https://dbdiagram.io/embed/5fdc18569a6c525a03bb8635'> </iframe>">
 
 ## Testing
   The program was developed through strict Test-Driven Development, utilizing
