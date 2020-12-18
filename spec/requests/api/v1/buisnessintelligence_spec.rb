@@ -86,7 +86,7 @@ describe 'Buisness Intelligence Endpoints' do
       expect(error_message[:error]).to eq('missing parameter')
 
       expect(error_message).to have_key(:errors)
-      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+      expect(error_message[:errors].first).to eq('quantity parameter with value required in search request')
 
       expect(error_message).to have_key(:status)
       expect(error_message[:status]).to eq('bad_request')
@@ -104,7 +104,7 @@ describe 'Buisness Intelligence Endpoints' do
       expect(error_message[:error]).to eq('missing parameter')
 
       expect(error_message).to have_key(:errors)
-      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+      expect(error_message[:errors].first).to eq('quantity parameter with value required in search request')
 
       expect(error_message).to have_key(:status)
       expect(error_message[:status]).to eq('bad_request')
@@ -149,7 +149,7 @@ describe 'Buisness Intelligence Endpoints' do
       expect(error_message[:error]).to eq('missing parameter')
 
       expect(error_message).to have_key(:errors)
-      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+      expect(error_message[:errors].first).to eq('quantity parameter with value required in search request')
 
       expect(error_message).to have_key(:status)
       expect(error_message[:status]).to eq('bad_request')
@@ -167,7 +167,7 @@ describe 'Buisness Intelligence Endpoints' do
       expect(error_message[:error]).to eq('missing parameter')
 
       expect(error_message).to have_key(:errors)
-      expect(error_message[:errors].first).to eq('quantity parameter required in search request')
+      expect(error_message[:errors].first).to eq('quantity parameter with value required in search request')
 
       expect(error_message).to have_key(:status)
       expect(error_message[:status]).to eq('bad_request')
@@ -215,7 +215,7 @@ describe 'Buisness Intelligence Endpoints' do
       expect(error_message[:error]).to eq('missing parameter')
 
       expect(error_message).to have_key(:errors)
-      expect(error_message[:errors].first).to eq('end parameter required in search request')
+      expect(error_message[:errors].first).to eq('end parameter with value required in search request')
 
       expect(error_message).to have_key(:status)
       expect(error_message[:status]).to eq('bad_request')
@@ -233,8 +233,8 @@ describe 'Buisness Intelligence Endpoints' do
       expect(error_message[:error]).to eq('missing parameter')
 
       expect(error_message).to have_key(:errors)
-      expect(error_message[:errors].first).to eq('start parameter required in search request')
-      expect(error_message[:errors].last).to eq('end parameter required in search request')
+      expect(error_message[:errors].first).to eq('start parameter with value required in search request')
+      expect(error_message[:errors].last).to eq('end parameter with value required in search request')
 
       expect(error_message).to have_key(:status)
       expect(error_message[:status]).to eq('bad_request')
