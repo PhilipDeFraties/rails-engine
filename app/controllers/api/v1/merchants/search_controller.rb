@@ -1,18 +1,34 @@
 class Api::V1::Merchants::SearchController < ApplicationController
 
   def index
-    merchants = Merchant.search(params.keys.first, params.values.first)
-    render json: MerchantSerializer.new(merchants)
+    unless search_attribute && !search_value.blank?
+      check_params(['search'])
+    else
+      merchants = Merchant.search(search_attribute, search_value)
+      render json: MerchantSerializer.new(merchants)
+    end
   end
 
   def show
-    merchant = Merchant.search(params.keys.first, params.values.first).first
-    render json: MerchantSerializer.new(merchant)
+    unless search_attribute && !search_value.blank?
+      check_params(['search'])
+    else
+      merchant = Merchant.search(search_attribute, search_value).first
+      render json: MerchantSerializer.new(merchant)
+    end
   end
 
   private
 
   def search_params
-    params.permit(params.keys.first, params.values.first)
+    params.permit(:name, :created_at, :updated_at)
+  end
+
+  def search_attribute
+    search_params.keys[0]
+  end
+
+  def search_value
+    search_params[search_attribute]
   end
 end
