@@ -32,7 +32,8 @@
   ```
 
 ## Schema
-  <img src="https://dbdiagram.io/embed/5fdc18569a6c525a03bb8635">
+  <img src="https://dbdiagram.io/d/5fdc18569a6c525a03bb8635">
+  
 
 ## Testing
   The program was developed through strict Test-Driven Development, utilizing
